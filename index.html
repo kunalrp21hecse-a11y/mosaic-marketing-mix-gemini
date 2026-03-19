@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mosaic Allocation Engine | Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            sage: '#87A89E', // Bodywise vibe
+                            sageDark: '#6A8A80',
+                            navy: '#1A2B3C',
+                            cream: '#FAFAFA',
+                            peach: '#E8C7B8', // Little joys vibe
+                            card: '#FFFFFF'
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 10px 40px -10px rgba(0,0,0,0.05)',
+                        'inner-soft': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.03)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #FAFAFA; color: #1A2B3C; }
+        .smooth-transition { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        input[type=range] {
+            height: 8px; background: #EDF2F7; border-radius: 8px; outline: none; appearance: none;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            appearance: none; width: 24px; height: 24px; border-radius: 50%;
+            background: #87A89E; cursor: pointer; border: 3px solid #FFFFFF;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s;
+        }
+        input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.1); }
+        .fade-in { animation: fadeIn 1s ease-in forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="font-sans pb-20 antialiased selection:bg-brand-sage selection:text-white">
+
+    <nav class="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-8 py-5 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="h-10 w-10 rounded-xl bg-brand-navy flex items-center justify-center text-white font-bold text-xl tracking-tighter">
+                    M.
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight text-brand-navy">Growth Allocation Engine</h1>
+                    <p class="text-[10px] uppercase tracking-widest text-gray-400 font-semibold">Q1 Strategy Tool</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <input type="password" id="gemini-key" placeholder="Enter Gemini API Key" class="text-xs px-3 py-2 border border-gray-200 rounded-lg outline-none focus:border-brand-sage shadow-inner-soft w-48 transition-all hidden md:block" title="Your key is never stored, used only locally.">
+                <button id="auth-btn" class="bg-brand-sage hover:bg-brand-sageDark text-white px-5 py-2 rounded-lg text-xs font-bold tracking-wide transition-colors shadow-sm"><i class="fas fa-lock mr-2"></i>Authenticate AI</button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="loading-screen" class="flex flex-col items-center justify-center h-screen fixed w-full bg-brand-cream z-50 top-0 left-0 transition-opacity duration-700">
+        <div class="h-16 w-16 mb-8 relative">
+            <div class="absolute inset-0 border-4 border-gray-200 rounded-full"></div>
+            <div class="absolute inset-0 border-4 border-brand-sage rounded-full border-t-transparent animate-spin"></div>
+        </div>
+        <h2 class="text-2xl font-bold text-brand-navy mb-3 uppercase tracking-wider">Syncing Data Store</h2>
+        <div class="bg-white px-6 py-3 rounded-2xl shadow-soft border border-gray-100 max-w-md text-center h-24 flex items-center justify-center">
+            <p id="insight-carousel" class="text-sm text-gray-500 font-medium leading-relaxed fade-in">Connecting to Mosaic endpoints...</p>
+        </div>
+        <p id="loading-progress" class="text-xs font-mono text-gray-400 mt-6 mt-8 uppercase tracking-widest">Page 1 / 150</p>
+    </div>
+
+    <div id="dashboard" class="max-w-7xl mx-auto p-6 hidden">
+        
+        <div class="mb-8 mt-6">
+            <span class="text-brand-sage font-bold text-xs uppercase tracking-widest mb-2 block">Phase 01</span>
+            <h2 class="text-3xl font-extrabold text-brand-navy mb-2 tracking-tight">Historical Context</h2>
+            <p class="text-gray-500 text-sm max-w-2xl leading-relaxed">36-month baseline data. Understanding our historical efficiency across channels is required before deploying the ₹50 Lakh operational budget.</p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-5 mb-10">
+            <div class="bg-white p-6 rounded-2xl shadow-soft border border-gray-100">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Total Spend</p>
+                <p id="kpi-spend" class="text-2xl font-extrabold text-brand-navy">₹0</p>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-soft border border-gray-100">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Total Revenue</p>
+                <p id="kpi-revenue" class="text-2xl font-extrabold text-brand-sage">₹0</p>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-soft border border-gray-100">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Blended ROAS</p>
+                <p id="kpi-roas" class="text-2xl font-extrabold text-brand-navy">0.0x</p>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-soft border border-gray-100">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Conversions</p>
+                <p id="kpi-conversions" class="text-2xl font-extrabold text-brand-navy">0</p>
+            </div>
+        </div>
+
+        <div class="mb-8 border-t border-gray-200 pt-12">
+            <div class="flex items-center justify-between mb-2">
+                <div>
+                    <span class="text-brand-sage font-bold text-xs uppercase tracking-widest mb-2 block">Phase 02</span>
+                    <h2 class="text-3xl font-extrabold text-brand-navy tracking-tight">₹50L Mix Optimizer</h2>
+                </div>
+            </div>
+            <p class="text-gray-500 text-sm max-w-3xl leading-relaxed">Adjust allocations below. The algorithm models diminishing returns based on historical ceilings. The generative AI model will analyze your mix in real-time.</p>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-8">
+            
+            <div class="lg:w-7/12 bg-white p-8 rounded-3xl shadow-soft border border-gray-100" id="slider-container">
+                </div>
+
+            <div class="lg:w-5/12 space-y-6">
+                
+                <div class="bg-white p-8 rounded-3xl shadow-soft border border-gray-100 sticky top-28">
+                    <h3 class="text-sm font-bold text-brand-navy uppercase tracking-widest mb-6 pb-4 border-b border-gray-100">Live Projections</h3>
+                    
+                    <div class="mb-8">
+                        <div class="flex justify-between items-baseline mb-2">
+                            <span id="proj-budget" class="text-4xl font-extrabold text-brand-navy tracking-tighter">₹0</span>
+                            <span class="text-sm font-semibold text-gray-400">/ ₹50.00 L</span>
+                        </div>
+                        <div class="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+                            <div id="budget-progress" class="bg-brand-sage h-full rounded-full transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                        <p id="budget-warning" class="text-red-500 text-[10px] mt-3 hidden font-bold tracking-widest uppercase"><i class="fas fa-exclamation-circle mr-1"></i> Budget Exceeded</p>
+                    </div>
+
+                    <div class="bg-gray-50 rounded-2xl p-5 mb-6 border border-gray-100 flex justify-between items-center">
+                        <span class="text-gray-500 text-xs font-bold uppercase tracking-widest">Est. Revenue</span>
+                        <span id="proj-revenue" class="text-2xl font-extrabold text-brand-sage tracking-tight">₹0.00 L</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 mb-8">
+                        <div>
+                            <span class="text-gray-400 text-[10px] uppercase font-bold tracking-widest mb-1 block">Est. ROAS</span>
+                            <span id="proj-roas" class="text-xl font-extrabold text-brand-navy">0.0x</span>
+                        </div>
+                        <div>
+                            <span class="text-gray-400 text-[10px] uppercase font-bold tracking-widest mb-1 block">Conversions</span>
+                            <span id="proj-conversions" class="text-xl font-extrabold text-brand-navy">0</span>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-gray-100 pt-6">
+                        <h4 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4 text-center">Mix Breakdown</h4>
+                        <div class="h-48 relative flex justify-center">
+                            <canvas id="mixChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-brand-navy p-8 rounded-3xl shadow-xl relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-white opacity-5 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-700"></div>
+                    <div class="flex justify-between items-center mb-4">
+                        <h4 class="text-xs font-bold text-brand-sage uppercase tracking-widest"><i class="fas fa-sparkles mr-2"></i>Gemini Analysis</h4>
+                        <button id="gen-ai-btn" class="bg-white/10 hover:bg-white/20 text-white text-[10px] uppercase tracking-wider px-3 py-1 rounded-lg transition border border-white/20">Generate</button>
+                    </div>
+                    <div id="ai-output" class="text-sm text-gray-300 leading-relaxed font-medium min-h-[100px]">
+                        Authenticate with your API key above, allocate your budget, and click Generate to receive real-time strategic analysis from Gemini.
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const formatMoneyCr = (num) => '₹' + (num / 10000000).toFixed(2) + ' Cr';
+        const formatMoneyLakhs = (num) => '₹' + (num / 100000).toFixed(2) + ' L';
+        const formatNumber = (num) => new Intl.NumberFormat('en-IN').format(num);
+
+        const TOTAL_BUDGET = 5000000; 
+        let globalChannelData = {};
+        let mixChartInstance = null;
+
+        // D2C Facts for Loading Screen
+        const facts = [
+            "India's D2C market is projected to reach $100B by 2025.",
+            "Customer acquisition costs (CAC) in wellness rose 30% YoY.",
+            "Top D2C brands reinvest 20-30% of revenue into performance marketing.",
+            "Retention is the new acquisition: Focus on LTV/CAC ratio > 3.",
+            "Content-to-commerce models drive 40% higher organic conversion."
+        ];
+        
+        let factIndex = 0;
+        setInterval(() => {
+            const el = document.getElementById('insight-carousel');
+            if(el) {
+                el.classList.remove('fade-in');
+                void el.offsetWidth; // trigger reflow
+                el.textContent = facts[factIndex % facts.length];
+                el.classList.add('fade-in');
+                factIndex++;
+            }
+        }, 3000);
+
+        Chart.defaults.font.family = '"Plus Jakarta Sans", sans-serif';
+
+        async function fetchAllData() {
+            let allData = [];
+            let page = 1;
+            let hasMore = true;
+            const progressText = document.getElementById('loading-progress');
+
+            try {
+                while (hasMore) {
+                    progressText.textContent = `Fetching Page ${page} / 150 (Max)`;
+                    const response = await fetch(`https://mosaicfellowship.in/api/data/marketing/daily?page=${page}&limit=100`);
+                    const result = await response.json();
+                    
+                    if (result.data && result.data.length > 0) {
+                        allData = allData.concat(result.data);
+                        page++;
+                        if(page > 150) hasMore = false; 
+                    } else {
+                        hasMore = false; 
+                    }
+                }
+                setTimeout(() => { processAndRenderData(allData); }, 1000); 
+            } catch (error) {
+                progressText.textContent = "Connection Error.";
+                progressText.classList.add("text-red-500");
+            }
+        }
+
+        function processAndRenderData(rawData) {
+            const channelStats = {};
+            let totalSpend = 0, totalRevenue = 0, totalConversions = 0;
+            const totalMonths = 36; 
+
+            rawData.forEach(row => {
+                totalSpend += row.spend;
+                totalRevenue += row.revenue;
+                totalConversions += row.conversions;
+
+                if (!channelStats[row.channel]) {
+                    channelStats[row.channel] = { channel: row.channel, spend: 0, revenue: 0, conversions: 0 };
+                }
+                channelStats[row.channel].spend += row.spend;
+                channelStats[row.channel].revenue += row.revenue;
+                channelStats[row.channel].conversions += row.conversions;
+            });
+
+            const channels = Object.values(channelStats).map(c => {
+                c.roas = c.spend > 0 ? (c.revenue / c.spend).toFixed(2) : 0;
+                c.cpa = c.conversions > 0 ? (c.spend / c.conversions).toFixed(2) : 0;
+                c.avgMonthlySpend = c.spend / totalMonths;
+                return c;
+            });
+
+            channels.sort((a, b) => b.roas - a.roas); 
+
+            document.getElementById('kpi-spend').textContent = formatMoneyCr(totalSpend);
+            document.getElementById('kpi-revenue').textContent = formatMoneyCr(totalRevenue);
+            document.getElementById('kpi-roas').textContent = (totalRevenue / totalSpend).toFixed(2) + 'x';
+            document.getElementById('kpi-conversions').textContent = formatNumber(totalConversions);
+
+            buildAllocator(channels);
+
+            const loader = document.getElementById('loading-screen');
+            loader.style.opacity = '0';
+            setTimeout(() => {
+                loader.classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+            }, 700);
+        }
+
+        function buildAllocator(channels) {
+            const container = document.getElementById('slider-container');
+            container.innerHTML = '';
+            let initialBudget = TOTAL_BUDGET / channels.length; 
+
+            channels.forEach((c, index) => {
+                globalChannelData[c.channel] = {
+                    baseRoas: parseFloat(c.roas),
+                    baseCpa: parseFloat(c.cpa),
+                    avgMonthlySpend: c.avgMonthlySpend,
+                    currentAllocation: initialBudget
+                };
+
+                const div = document.createElement('div');
+                div.className = "mb-6 pb-6 border-b border-gray-100 last:border-0 last:pb-0 relative";
+                
+                div.innerHTML = `
+                    <div class="flex justify-between items-center mb-3">
+                        <div class="w-1/3">
+                            <span class="font-bold text-brand-navy text-sm tracking-wide block">${c.channel}</span>
+                            <span class="text-[10px] font-bold text-gray-400 uppercase">Avg: ${formatMoneyLakhs(c.avgMonthlySpend)}</span>
+                        </div>
+                        <div class="w-2/3 flex items-center space-x-4">
+                            <input type="range" id="slider-${index}" min="0" max="1500000" step="25000" value="${initialBudget}" class="w-full">
+                            <span id="val-${index}" class="text-sm font-bold bg-gray-50 px-3 py-1.5 rounded-lg w-24 text-right border border-gray-200 text-brand-navy shadow-inner-soft">${formatMoneyLakhs(initialBudget)}</span>
+                        </div>
+                    </div>
+                    <div id="warn-${index}" class="text-[10px] uppercase font-bold text-right tracking-widest h-3 transition-colors duration-300"></div>
+                `;
+                container.appendChild(div);
+
+                document.getElementById(`slider-${index}`).addEventListener('input', (e) => {
+                    const newVal = parseInt(e.target.value);
+                    document.getElementById(`val-${index}`).textContent = formatMoneyLakhs(newVal);
+                    globalChannelData[c.channel].currentAllocation = newVal;
+                    updateProjections();
+                });
+            });
+
+            updateProjections(); 
+        }
+
+        function updateMixChart() {
+            const labels = Object.keys(globalChannelData);
+            const data = labels.map(k => globalChannelData[k].currentAllocation);
+            const colors = ['#87A89E', '#1A2B3C', '#E8C7B8', '#A3B1C6', '#D1D5DB', '#FCD34D', '#F87171', '#60A5FA', '#34D399', '#A78BFA'];
+
+            if(mixChartInstance) {
+                mixChartInstance.data.datasets[0].data = data;
+                mixChartInstance.update();
+            } else {
+                const ctx = document.getElementById('mixChart').getContext('2d');
+                mixChartInstance = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: { labels: labels, datasets: [{ data: data, backgroundColor: colors, borderWidth: 0 }] },
+                    options: { responsive: true, maintainAspectRatio: false, cutout: '75%', plugins: { legend: { display: false } } }
+                });
+            }
+        }
+
+        function updateProjections() {
+            let totalAllocated = 0, totalProjectedRevenue = 0, totalProjectedConversions = 0;
+
+            Object.keys(globalChannelData).forEach((key, index) => {
+                const data = globalChannelData[key];
+                const spend = data.currentAllocation;
+                totalAllocated += spend;
+
+                let activeRoas = data.baseRoas;
+                let activeCpa = data.baseCpa;
+                let warnEl = document.getElementById(`warn-${index}`);
+
+                if (spend > data.avgMonthlySpend * 2.0) {
+                    activeRoas *= 0.70; activeCpa *= 1.30;
+                    warnEl.textContent = "Saturation Risk: -30% ROAS";
+                    warnEl.className = "text-[10px] uppercase font-bold text-right tracking-widest h-3 text-red-500";
+                } else if (spend > data.avgMonthlySpend * 1.5) {
+                    activeRoas *= 0.85; activeCpa *= 1.15;
+                    warnEl.textContent = "Scaling Penalty: -15% ROAS";
+                    warnEl.className = "text-[10px] uppercase font-bold text-right tracking-widest h-3 text-orange-400";
+                } else if (spend > 0 && spend < data.avgMonthlySpend * 0.5) {
+                    activeRoas *= 1.10; activeCpa *= 0.90;
+                    warnEl.textContent = "Targeted: +10% Efficiency";
+                    warnEl.className = "text-[10px] uppercase font-bold text-right tracking-widest h-3 text-brand-sage";
+                } else if (spend === 0) {
+                    warnEl.textContent = "Paused";
+                    warnEl.className = "text-[10px] uppercase font-bold text-right tracking-widest h-3 text-gray-400";
+                } else {
+                    warnEl.textContent = "Optimal Range";
+                    warnEl.className = "text-[10px] uppercase font-bold text-right tracking-widest h-3 text-brand-navy";
+                }
+
+                totalProjectedRevenue += (spend * activeRoas);
+                if (activeCpa > 0) totalProjectedConversions += (spend / activeCpa);
+            });
+
+            document.getElementById('proj-budget').textContent = formatMoneyLakhs(totalAllocated);
+            document.getElementById('proj-revenue').textContent = formatMoneyLakhs(totalProjectedRevenue);
+            
+            const blendedRoas = totalAllocated > 0 ? (totalProjectedRevenue / totalAllocated).toFixed(2) : 0;
+            document.getElementById('proj-roas').textContent = blendedRoas + 'x';
+            document.getElementById('proj-conversions').textContent = formatNumber(Math.round(totalProjectedConversions));
+
+            const pct = (totalAllocated / TOTAL_BUDGET) * 100;
+            const bar = document.getElementById('budget-progress');
+            bar.style.width = Math.min(pct, 100) + '%';
+            
+            const warnGlobal = document.getElementById('budget-warning');
+            const budgetText = document.getElementById('proj-budget');
+            if (totalAllocated > TOTAL_BUDGET) {
+                bar.classList.replace('bg-brand-sage', 'bg-red-500');
+                budgetText.classList.replace('text-brand-navy', 'text-red-500');
+                warnGlobal.classList.remove('hidden');
+            } else {
+                bar.classList.replace('bg-red-500', 'bg-brand-sage');
+                budgetText.classList.replace('text-red-500', 'text-brand-navy');
+                warnGlobal.classList.add('hidden');
+            }
+
+            updateMixChart();
+        }
+
+        // ==========================================
+        // REAL GEMINI API INTEGRATION
+        // ==========================================
+        document.getElementById('auth-btn').addEventListener('click', () => {
+            const keyInput = document.getElementById('gemini-key');
+            if(keyInput.classList.contains('hidden')) {
+                keyInput.classList.remove('hidden');
+                keyInput.focus();
+            } else {
+                if(keyInput.value.length > 10) {
+                    document.getElementById('auth-btn').innerHTML = '<i class="fas fa-check mr-2"></i>Authenticated';
+                    document.getElementById('auth-btn').classList.replace('bg-brand-sage', 'bg-brand-navy');
+                } else {
+                    alert("Please enter a valid API key.");
+                }
+            }
+        });
+
+        document.getElementById('gen-ai-btn').addEventListener('click', async () => {
+            const apiKey = document.getElementById('gemini-key').value;
+            const outputEl = document.getElementById('ai-output');
+            
+            if (!apiKey) {
+                outputEl.innerHTML = "<span class='text-red-400'>Error: Please click 'Authenticate AI' in the top right and enter your Gemini API key first.</span>";
+                return;
+            }
+
+            outputEl.innerHTML = '<i class="fas fa-circle-notch fa-spin text-brand-sage mr-2"></i> Analyzing mix...';
+
+            // Prepare prompt data
+            let promptData = "Analyze this marketing budget allocation for an Indian D2C Wellness brand (50L total budget):\n";
+            Object.keys(globalChannelData).forEach(k => {
+                promptData += `- ${k}: ₹${globalChannelData[k].currentAllocation}\n`;
+            });
+            promptData += "\nKeep it strictly under 50 words. Act as a CMO. Mention one risk and one opportunity based on this specific spend mix.";
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: promptData }] }] })
+                });
+                const data = await response.json();
+                
+                if(data.error) throw new Error(data.error.message);
+                
+                outputEl.innerHTML = data.candidates[0].content.parts[0].text;
+            } catch (error) {
+                outputEl.innerHTML = `<span class='text-red-400'>API Error: ${error.message}</span>`;
+            }
+        });
+
+        window.onload = fetchAllData;
+    </script>
+</body>
+</html>
