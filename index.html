@@ -1,111 +1,187 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CMO Control Room - Marketing Mix</title>
+    <title>Mosaic Allocation Engine | Kunal's Submission</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom Animations & Glassmorphism */
+        body {
+            background-color: #0f172a; /* Deep slate */
+            background-image: radial-gradient(circle at top right, #1e1b4b, transparent 40%),
+                              radial-gradient(circle at bottom left, #0f172a, transparent 40%);
+            background-attachment: fixed;
+            color: #f8fafc;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Staggered animation delays */
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+        
+        /* Custom range slider styling for premium feel */
+        input[type=range] {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            outline: none;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #8b5cf6;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+            transition: transform 0.1s;
+        }
+        input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+    </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans pb-20">
+<body class="font-sans pb-20 antialiased selection:bg-purple-500 selection:text-white">
 
-    <nav class="bg-indigo-900 text-white p-4 shadow-lg sticky top-0 z-40">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-bold tracking-tight"><i class="fas fa-chart-line mr-2"></i> Mosaic CMO Control Room</h1>
-            <span class="bg-indigo-700 px-3 py-1 rounded text-sm font-semibold border border-indigo-500">₹50L Allocation Engine</span>
+    <nav class="glass-panel sticky top-0 z-50 border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="h-8 w-8 rounded-full bg-gradient-to-tr from-purple-600 to-blue-500 flex items-center justify-center shadow-lg shadow-purple-500/30">
+                    <i class="fas fa-layer-group text-white text-sm"></i>
+                </div>
+                <h1 class="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">Marketing Mix Optimizer</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span class="text-xs font-mono text-slate-400">STATUS: LIVE</span>
+                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/20 text-purple-300 border border-purple-500/30 shadow-[0_0_15px_rgba(168,85,247,0.2)]">₹50L Allocation Engine</span>
+            </div>
         </div>
     </nav>
 
-    <div id="loading-screen" class="flex flex-col items-center justify-center h-screen fixed w-full bg-slate-50 z-50 top-0 left-0 pt-16">
-        <i class="fas fa-circle-notch fa-spin text-indigo-600 text-6xl mb-4"></i>
-        <h2 class="text-2xl font-bold text-slate-700 mb-2">Compiling 3 Years of Data...</h2>
-        <p id="loading-text" class="text-slate-500 font-mono">Fetching page 1...</p>
+    <div id="loading-screen" class="flex flex-col items-center justify-center h-screen fixed w-full bg-[#0f172a] z-50 top-0 left-0">
+        <div class="relative w-24 h-24 mb-6">
+            <div class="absolute inset-0 border-t-2 border-purple-500 rounded-full animate-spin"></div>
+            <div class="absolute inset-2 border-r-2 border-blue-500 rounded-full animate-spin shadow-[0_0_15px_rgba(59,130,246,0.5)]" style="animation-duration: 1.5s;"></div>
+            <i class="fas fa-database absolute inset-0 m-auto h-6 w-6 text-slate-300 text-center leading-6"></i>
+        </div>
+        <h2 class="text-2xl font-light tracking-widest text-white mb-2 uppercase">Ingesting Data</h2>
+        <p id="loading-text" class="text-slate-400 font-mono text-sm">Connecting to Mosaic API...</p>
     </div>
 
     <div id="dashboard" class="max-w-7xl mx-auto p-6 hidden">
         
-        <div class="mb-4 mt-4">
-            <h2 class="text-2xl font-extrabold text-slate-900">Historical Performance (All Time)</h2>
-            <p class="text-slate-500 text-sm">Aggregated 3-year performance identifying baseline channel efficiencies.</p>
+        <div class="mb-10 mt-6 animate-fade-in-up">
+            <h2 class="text-4xl font-extrabold text-white mb-3">Historical Baseline <span class="text-purple-500">.</span></h2>
+            <p class="text-slate-400 text-sm max-w-2xl leading-relaxed">36-month aggregated performance data. Use this baseline to understand structural channel efficiencies before reallocating the ₹50L budget.</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-blue-500">
-                <p class="text-xs font-semibold text-slate-500 uppercase">Total Spend</p>
-                <p id="kpi-spend" class="text-xl font-bold text-slate-800 mt-1">₹0</p>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-10 animate-fade-in-up delay-100">
+            <div class="glass-panel p-5 rounded-2xl relative overflow-hidden group">
+                <div class="absolute -right-4 -top-4 w-20 h-20 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-500/20 transition-all"></div>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Total Spend</p>
+                <p id="kpi-spend" class="text-2xl font-bold text-white">₹0</p>
             </div>
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-green-500">
-                <p class="text-xs font-semibold text-slate-500 uppercase">Total Revenue</p>
-                <p id="kpi-revenue" class="text-xl font-bold text-slate-800 mt-1">₹0</p>
+            <div class="glass-panel p-5 rounded-2xl relative overflow-hidden group">
+                <div class="absolute -right-4 -top-4 w-20 h-20 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-all"></div>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Total Revenue</p>
+                <p id="kpi-revenue" class="text-2xl font-bold text-emerald-400">₹0</p>
             </div>
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-indigo-500">
-                <p class="text-xs font-semibold text-slate-500 uppercase">Blended ROAS</p>
-                <p id="kpi-roas" class="text-xl font-bold text-slate-800 mt-1">0.0x</p>
+            <div class="glass-panel p-5 rounded-2xl relative overflow-hidden group">
+                <div class="absolute -right-4 -top-4 w-20 h-20 bg-purple-500/10 rounded-full blur-2xl group-hover:bg-purple-500/20 transition-all"></div>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Blended ROAS</p>
+                <p id="kpi-roas" class="text-2xl font-bold text-purple-400">0.0x</p>
             </div>
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-purple-500">
-                <p class="text-xs font-semibold text-slate-500 uppercase">Total Conversions</p>
-                <p id="kpi-conversions" class="text-xl font-bold text-slate-800 mt-1">0</p>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
-            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-                <h3 class="text-md font-bold text-slate-800 mb-2">Spend vs Revenue by Channel</h3>
-                <canvas id="spendRevChart" height="200"></canvas>
-            </div>
-            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-                <h3 class="text-md font-bold text-slate-800 mb-2">Efficiency Matrix (ROAS vs CPA)</h3>
-                <canvas id="efficiencyChart" height="200"></canvas>
+            <div class="glass-panel p-5 rounded-2xl relative overflow-hidden group">
+                <div class="absolute -right-4 -top-4 w-20 h-20 bg-pink-500/10 rounded-full blur-2xl group-hover:bg-pink-500/20 transition-all"></div>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Total Conversions</p>
+                <p id="kpi-conversions" class="text-2xl font-bold text-white">0</p>
             </div>
         </div>
 
-        <div class="mb-6 border-t pt-8 border-slate-300">
-            <h2 class="text-3xl font-extrabold text-slate-900"><i class="fas fa-sliders-h text-indigo-600 mr-2"></i> Strategic Simulator: ₹50L Monthly Budget</h2>
-            <p class="text-slate-600 mt-2 max-w-3xl">Adjust sliders to allocate the monthly budget. The engine accounts for <strong>diminishing returns</strong> based on historical thresholds. Pushing spend too far beyond historical averages will negatively impact ROAS.</p>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-16 animate-fade-in-up delay-200">
+            <div class="glass-panel p-6 rounded-2xl">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-sm font-bold text-slate-200 uppercase tracking-wide">Spend vs Revenue</h3>
+                    <i class="fas fa-chart-bar text-slate-500"></i>
+                </div>
+                <canvas id="spendRevChart" height="220"></canvas>
+            </div>
+            <div class="glass-panel p-6 rounded-2xl">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-sm font-bold text-slate-200 uppercase tracking-wide">Efficiency Matrix (ROAS/CPA)</h3>
+                    <i class="fas fa-chart-line text-slate-500"></i>
+                </div>
+                <canvas id="efficiencyChart" height="220"></canvas>
+            </div>
         </div>
 
-        <div class="flex flex-col lg:flex-row gap-8">
+        <div class="mb-8 border-t border-white/10 pt-12 animate-fade-in-up delay-300">
+            <h2 class="text-4xl font-extrabold text-white mb-3">The Decision Engine <span class="text-blue-500">.</span></h2>
+            <p class="text-slate-400 text-sm max-w-3xl leading-relaxed">Allocate the ₹50L budget. The algorithm models non-linear diminishing returns. Over-investing beyond historical capacity will degrade ROAS, while precise targeting yields efficiency multipliers.</p>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-8 animate-fade-in-up delay-300">
             
-            <div class="lg:w-2/3 bg-white p-6 rounded-xl shadow-md border border-slate-200" id="slider-container">
+            <div class="lg:w-7/12 glass-panel p-6 rounded-3xl" id="slider-container">
                 </div>
 
-            <div class="lg:w-1/3">
-                <div class="bg-slate-900 text-white p-6 rounded-xl shadow-xl sticky top-24">
-                    <h3 class="text-xl font-bold mb-6 border-b border-slate-700 pb-2">30-Day Projection</h3>
+            <div class="lg:w-5/12">
+                <div class="glass-panel p-6 rounded-3xl sticky top-24 shadow-2xl shadow-black/50 border border-white/10">
+                    <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
+                        <h3 class="text-lg font-bold text-white tracking-wide"><i class="fas fa-satellite-dish text-purple-400 mr-2 animate-pulse"></i> Live Projection</h3>
+                        <span class="flex items-center text-xs text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded border border-emerald-400/20"><span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-ping"></span> Syncing</span>
+                    </div>
                     
-                    <div class="mb-6">
-                        <p class="text-slate-400 text-sm font-semibold uppercase tracking-wide">Budget Allocated</p>
-                        <div class="flex justify-between items-end mt-1">
-                            <span id="proj-budget" class="text-3xl font-bold text-blue-400">₹0</span>
-                            <span class="text-sm text-slate-500 mb-1">/ ₹50.00 L</span>
+                    <div class="mb-8">
+                        <p class="text-slate-400 text-xs font-semibold uppercase tracking-widest mb-2">Budget Utilized</p>
+                        <div class="flex justify-between items-baseline mb-2">
+                            <span id="proj-budget" class="text-4xl font-black text-white tracking-tighter">₹0</span>
+                            <span class="text-sm font-mono text-slate-500">/ ₹50.00 L</span>
                         </div>
-                        <div class="w-full bg-slate-700 rounded-full h-2 mt-2">
-                            <div id="budget-progress" class="bg-blue-500 h-2 rounded-full" style="width: 0%"></div>
+                        <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                            <div id="budget-progress" class="bg-gradient-to-r from-blue-500 to-purple-500 h-full rounded-full transition-all duration-300 relative shadow-[0_0_10px_rgba(168,85,247,0.8)]" style="width: 0%"></div>
                         </div>
-                        <p id="budget-warning" class="text-red-400 text-xs mt-2 hidden font-bold"><i class="fas fa-exclamation-triangle"></i> Budget Exceeded!</p>
+                        <p id="budget-warning" class="text-red-400 text-xs mt-3 hidden font-bold tracking-wide"><i class="fas fa-exclamation-triangle mr-1"></i> BUDGET EXCEEDED. REDUCE ALLOCATION.</p>
                     </div>
 
-                    <div class="space-y-4">
-                        <div class="bg-slate-800 p-4 rounded-lg border border-slate-700">
-                            <p class="text-slate-400 text-xs uppercase tracking-wide font-semibold">Est. Monthly Revenue</p>
-                            <p id="proj-revenue" class="text-2xl font-bold text-green-400 mt-1">₹0.00 L</p>
+                    <div class="space-y-3 mb-8">
+                        <div class="bg-black/20 p-4 rounded-xl border border-white/5 flex justify-between items-center">
+                            <span class="text-slate-400 text-xs uppercase tracking-wider font-semibold">Est. Revenue</span>
+                            <span id="proj-revenue" class="text-2xl font-bold text-emerald-400 tracking-tight">₹0.00 L</span>
                         </div>
-                        
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="bg-slate-800 p-4 rounded-lg border border-slate-700">
-                                <p class="text-slate-400 text-xs uppercase font-semibold">Blended ROAS</p>
-                                <p id="proj-roas" class="text-xl font-bold text-indigo-300 mt-1">0.0x</p>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-black/20 p-4 rounded-xl border border-white/5 flex flex-col justify-center">
+                                <span class="text-slate-500 text-[10px] uppercase font-bold tracking-widest mb-1">Blended ROAS</span>
+                                <span id="proj-roas" class="text-xl font-bold text-purple-300">0.0x</span>
                             </div>
-                            <div class="bg-slate-800 p-4 rounded-lg border border-slate-700">
-                                <p class="text-slate-400 text-xs uppercase font-semibold">New Conversions</p>
-                                <p id="proj-conversions" class="text-xl font-bold text-purple-300 mt-1">0</p>
+                            <div class="bg-black/20 p-4 rounded-xl border border-white/5 flex flex-col justify-center">
+                                <span class="text-slate-500 text-[10px] uppercase font-bold tracking-widest mb-1">Conversions</span>
+                                <span id="proj-conversions" class="text-xl font-bold text-blue-300">0</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="mt-6 text-xs text-slate-500 leading-relaxed">
-                        * Projections use a non-linear scaling algorithm. Allocating >150% of historical average monthly spend incurs a 15% efficiency penalty. Allocating >200% incurs a 30% penalty.
+                    <div class="bg-gradient-to-br from-indigo-900/40 to-purple-900/40 p-5 rounded-2xl border border-indigo-500/20 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-indigo-500 to-transparent opacity-50"></div>
+                        <h4 class="text-xs font-bold text-indigo-300 uppercase tracking-widest mb-2 flex items-center"><i class="fas fa-brain mr-2"></i> Strategic Insight</h4>
+                        <p id="ai-insight" class="text-sm text-slate-300 leading-relaxed font-medium">
+                            Waiting for budget allocation... Distribute funds to analyze strategy.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -118,8 +194,12 @@
         const formatMoneyLakhs = (num) => '₹' + (num / 100000).toFixed(2) + ' L';
         const formatNumber = (num) => new Intl.NumberFormat('en-IN').format(num);
 
-        const TOTAL_BUDGET = 5000000; // 50 Lakhs
+        const TOTAL_BUDGET = 5000000; 
         let globalChannelData = {};
+
+        // Chart.js Dark Mode Defaults
+        Chart.defaults.color = '#94a3b8';
+        Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.05)';
 
         async function fetchAllData() {
             let allData = [];
@@ -129,7 +209,7 @@
 
             try {
                 while (hasMore) {
-                    loadingText.textContent = `Fetching page ${page}... (${allData.length} rows loaded)`;
+                    loadingText.textContent = `Fetching page ${page} from secure endpoint...`;
                     const response = await fetch(`https://mosaicfellowship.in/api/data/marketing/daily?page=${page}&limit=100`);
                     const result = await response.json();
                     
@@ -141,7 +221,7 @@
                         hasMore = false; 
                     }
                 }
-                processAndRenderData(allData);
+                setTimeout(() => { processAndRenderData(allData); }, 500); // Tiny delay to show off the cool loading screen
             } catch (error) {
                 loadingText.textContent = "Error loading data. Check console.";
                 loadingText.classList.add("text-red-500");
@@ -151,7 +231,7 @@
         function processAndRenderData(rawData) {
             const channelStats = {};
             let totalSpend = 0, totalRevenue = 0, totalConversions = 0;
-            const totalMonths = 36; // 3 years of data roughly
+            const totalMonths = 36; 
 
             rawData.forEach(row => {
                 totalSpend += row.spend;
@@ -159,9 +239,7 @@
                 totalConversions += row.conversions;
 
                 if (!channelStats[row.channel]) {
-                    channelStats[row.channel] = {
-                        channel: row.channel, spend: 0, revenue: 0, conversions: 0
-                    };
+                    channelStats[row.channel] = { channel: row.channel, spend: 0, revenue: 0, conversions: 0 };
                 }
                 channelStats[row.channel].spend += row.spend;
                 channelStats[row.channel].revenue += row.revenue;
@@ -171,12 +249,11 @@
             const channels = Object.values(channelStats).map(c => {
                 c.roas = c.spend > 0 ? (c.revenue / c.spend).toFixed(2) : 0;
                 c.cpa = c.conversions > 0 ? (c.spend / c.conversions).toFixed(2) : 0;
-                // Core logic for Phase 2: Find the historical monthly average
                 c.avgMonthlySpend = c.spend / totalMonths;
                 return c;
             });
 
-            channels.sort((a, b) => b.roas - a.roas); // Sort by efficiency for the sliders
+            channels.sort((a, b) => b.roas - a.roas); 
 
             document.getElementById('kpi-spend').textContent = formatMoneyCr(totalSpend);
             document.getElementById('kpi-revenue').textContent = formatMoneyCr(totalRevenue);
@@ -186,8 +263,11 @@
             renderCharts(channels);
             buildAllocator(channels);
 
-            document.getElementById('loading-screen').classList.add('hidden');
-            document.getElementById('dashboard').classList.remove('hidden');
+            document.getElementById('loading-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('loading-screen').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+            }, 500);
         }
 
         function renderCharts(channels) {
@@ -202,11 +282,11 @@
                 data: {
                     labels: labels,
                     datasets: [
-                        { label: 'Spend', data: spendData, backgroundColor: '#3b82f6', borderRadius: 3 },
-                        { label: 'Revenue', data: revData, backgroundColor: '#22c55e', borderRadius: 3 }
+                        { label: 'Spend', data: spendData, backgroundColor: 'rgba(59, 130, 246, 0.8)', borderRadius: 4 },
+                        { label: 'Revenue', data: revData, backgroundColor: 'rgba(16, 185, 129, 0.8)', borderRadius: 4 }
                     ]
                 },
-                options: { responsive: true, scales: { y: { display: false } }, plugins: { legend: { position: 'bottom' } } }
+                options: { responsive: true, scales: { y: { display: false } }, plugins: { legend: { position: 'bottom', labels: {color: '#cbd5e1'} } } }
             });
 
             new Chart(document.getElementById('efficiencyChart'), {
@@ -214,30 +294,24 @@
                 data: {
                     labels: labels,
                     datasets: [
-                        { type: 'line', label: 'ROAS (x)', data: roasData, borderColor: '#8b5cf6', backgroundColor: '#8b5cf6', borderWidth: 3, tension: 0.3, yAxisID: 'y1' },
-                        { type: 'bar', label: 'CPA (₹)', data: cpaData, backgroundColor: '#e2e8f0', borderRadius: 3, yAxisID: 'y' }
+                        { type: 'line', label: 'ROAS (x)', data: roasData, borderColor: '#a855f7', backgroundColor: '#a855f7', borderWidth: 3, tension: 0.4, yAxisID: 'y1', pointBackgroundColor: '#fff', pointBorderWidth: 2, pointRadius: 4 },
+                        { type: 'bar', label: 'CPA (₹)', data: cpaData, backgroundColor: 'rgba(148, 163, 184, 0.2)', borderRadius: 4, yAxisID: 'y' }
                     ]
                 },
                 options: {
                     responsive: true,
                     scales: {
-                        y: { type: 'linear', position: 'left', title: {display: true, text: 'CPA'} },
-                        y1: { type: 'linear', position: 'right', grid: {drawOnChartArea: false}, title: {display: true, text: 'ROAS'} }
+                        y: { type: 'linear', position: 'left', title: {display: true, text: 'CPA (₹)', color: '#64748b'} },
+                        y1: { type: 'linear', position: 'right', grid: {drawOnChartArea: false}, title: {display: true, text: 'ROAS', color: '#64748b'} }
                     },
-                    plugins: { legend: { position: 'bottom' } }
+                    plugins: { legend: { position: 'bottom', labels: {color: '#cbd5e1'} } }
                 }
             });
         }
 
-        // ==========================================
-        // PHASE 2: ALLOCATOR LOGIC
-        // ==========================================
-
         function buildAllocator(channels) {
             const container = document.getElementById('slider-container');
             container.innerHTML = '';
-            
-            // Auto-distribute ₹50L based on historical ROAS rankings initially to give a smart default
             let initialBudget = TOTAL_BUDGET / channels.length; 
 
             channels.forEach((c, index) => {
@@ -249,22 +323,24 @@
                 };
 
                 const div = document.createElement('div');
-                div.className = "mb-5 pb-5 border-b border-slate-100 last:border-0 last:pb-0";
+                div.className = "mb-6 pb-6 border-b border-white/5 last:border-0 last:pb-0 relative";
                 
                 div.innerHTML = `
-                    <div class="flex justify-between items-center mb-2">
-                        <div class="font-bold text-slate-800 w-1/3">${c.channel} <span class="text-xs font-normal text-slate-400 block">Avg: ${formatMoneyLakhs(c.avgMonthlySpend)}/mo</span></div>
+                    <div class="flex justify-between items-center mb-3">
+                        <div class="w-1/3">
+                            <span class="font-bold text-white text-sm tracking-wide block">${c.channel}</span>
+                            <span class="text-[10px] font-mono text-slate-500 uppercase">Cap: ${formatMoneyLakhs(c.avgMonthlySpend * 1.5)}</span>
+                        </div>
                         <div class="w-2/3 flex items-center space-x-4">
-                            <input type="range" id="slider-${index}" min="0" max="1500000" step="50000" value="${initialBudget}" 
-                                class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
-                            <span id="val-${index}" class="text-sm font-bold bg-slate-100 px-3 py-1 rounded w-24 text-right border border-slate-200">${formatMoneyLakhs(initialBudget)}</span>
+                            <input type="range" id="slider-${index}" min="0" max="1500000" step="25000" value="${initialBudget}" 
+                                class="w-full">
+                            <span id="val-${index}" class="text-sm font-mono font-bold bg-black/40 px-3 py-1.5 rounded-lg w-24 text-right border border-white/10 text-white shadow-inner">${formatMoneyLakhs(initialBudget)}</span>
                         </div>
                     </div>
-                    <div id="warn-${index}" class="text-xs text-right text-slate-500 h-4 transition-colors duration-300">Maintaining optimal efficiency.</div>
+                    <div id="warn-${index}" class="text-[10px] uppercase font-bold text-right tracking-widest h-3 transition-colors duration-300"></div>
                 `;
                 container.appendChild(div);
 
-                // Add Event Listener to slider
                 document.getElementById(`slider-${index}`).addEventListener('input', (e) => {
                     const newVal = parseInt(e.target.value);
                     document.getElementById(`val-${index}`).textContent = formatMoneyLakhs(newVal);
@@ -273,52 +349,73 @@
                 });
             });
 
-            updateProjections(); // Run initial calculation
+            updateProjections(); 
+        }
+
+        function generateAIInsight(totalAllocated, maxChannel, maxSpend, maxLimit) {
+            const insightBox = document.getElementById('ai-insight');
+            
+            if (totalAllocated > TOTAL_BUDGET) {
+                insightBox.innerHTML = "<span class='text-red-400'>Warning: Total budget constraint breached.</span> You must reduce spend to validate the model. The CFO will reject this plan.";
+                return;
+            }
+
+            if (maxSpend > (maxLimit * 2.0)) {
+                insightBox.innerHTML = `You are massively over-leveraged on <span class='text-white font-bold'>${maxChannel}</span>. Our historical data proves that pushing spend this high hits a severe saturation point, degrading your ROAS by 30%. Reallocate to high-efficiency, lower-volume channels.`;
+            } else if (maxSpend > (maxLimit * 1.5)) {
+                insightBox.innerHTML = `Aggressive push on <span class='text-white font-bold'>${maxChannel}</span>. You will see volume, but your CPA is creeping up due to audience fatigue. Consider diversifying this excess budget into Affiliate or Email.`;
+            } else if (totalAllocated === TOTAL_BUDGET) {
+                insightBox.innerHTML = `Perfectly balanced allocation. By keeping channels within their optimal historical thresholds, we are projecting maximum blended efficiency without hitting diminishing returns.`;
+            } else {
+                insightBox.innerHTML = `Budget underutilized. You have ${(TOTAL_BUDGET - totalAllocated) / 100000} Lakhs remaining. Scale up your highest ROAS channels gradually until they hit their efficiency ceiling.`;
+            }
         }
 
         function updateProjections() {
-            let totalAllocated = 0;
-            let totalProjectedRevenue = 0;
-            let totalProjectedConversions = 0;
+            let totalAllocated = 0, totalProjectedRevenue = 0, totalProjectedConversions = 0;
+            let highestSpendChannel = "";
+            let highestSpendAmount = 0;
+            let limitForHighest = 0;
 
             Object.keys(globalChannelData).forEach((key, index) => {
                 const data = globalChannelData[key];
                 const spend = data.currentAllocation;
                 totalAllocated += spend;
 
+                if (spend > highestSpendAmount) {
+                    highestSpendAmount = spend;
+                    highestSpendChannel = key;
+                    limitForHighest = data.avgMonthlySpend;
+                }
+
                 let activeRoas = data.baseRoas;
                 let activeCpa = data.baseCpa;
                 let warnEl = document.getElementById(`warn-${index}`);
 
-                // The Magic Diminishing Returns Logic
                 if (spend > data.avgMonthlySpend * 2.0) {
-                    activeRoas *= 0.70; // 30% penalty
-                    activeCpa *= 1.30;
-                    warnEl.textContent = "Over-saturated: Severe diminishing returns (-30% ROAS)";
-                    warnEl.className = "text-xs text-right h-4 text-red-500 font-bold";
+                    activeRoas *= 0.70; activeCpa *= 1.30;
+                    warnEl.textContent = "Saturation Risk: -30% Efficiency Penalty";
+                    warnEl.className = "text-[10px] uppercase font-bold text-right tracking-widest h-3 text-red-500 animate-pulse";
                 } else if (spend > data.avgMonthlySpend * 1.5) {
-                    activeRoas *= 0.85; // 15% penalty
-                    activeCpa *= 1.15;
-                    warnEl.textContent = "Scaling Warning: Slight drop in efficiency (-15% ROAS)";
-                    warnEl.className = "text-xs text-right h-4 text-orange-500 font-semibold";
+                    activeRoas *= 0.85; activeCpa *= 1.15;
+                    warnEl.textContent = "Scaling Penalty: -15% ROAS Drop";
+                    warnEl.className = "text-[10px] uppercase font-bold text-right tracking-widest h-3 text-orange-400";
                 } else if (spend > 0 && spend < data.avgMonthlySpend * 0.5) {
-                    activeRoas *= 1.10; // 10% boost for highly targeted small spend
-                    activeCpa *= 0.90;
-                    warnEl.textContent = "Highly Targeted: Premium efficiency (+10% ROAS)";
-                    warnEl.className = "text-xs text-right h-4 text-green-500 font-semibold";
+                    activeRoas *= 1.10; activeCpa *= 0.90;
+                    warnEl.textContent = "Hyper-Targeted: +10% Efficiency Multiplier";
+                    warnEl.className = "text-[10px] uppercase font-bold text-right tracking-widest h-3 text-emerald-400";
                 } else if (spend === 0) {
-                    warnEl.textContent = "Channel paused.";
-                    warnEl.className = "text-xs text-right h-4 text-slate-400";
+                    warnEl.textContent = "Channel Paused";
+                    warnEl.className = "text-[10px] uppercase font-bold text-right tracking-widest h-3 text-slate-600";
                 } else {
-                    warnEl.textContent = "Optimal spend zone.";
-                    warnEl.className = "text-xs text-right h-4 text-slate-500";
+                    warnEl.textContent = "Optimal Range";
+                    warnEl.className = "text-[10px] uppercase font-bold text-right tracking-widest h-3 text-slate-500";
                 }
 
                 totalProjectedRevenue += (spend * activeRoas);
                 if (activeCpa > 0) totalProjectedConversions += (spend / activeCpa);
             });
 
-            // Update UI
             document.getElementById('proj-budget').textContent = formatMoneyLakhs(totalAllocated);
             document.getElementById('proj-revenue').textContent = formatMoneyLakhs(totalProjectedRevenue);
             
@@ -326,7 +423,6 @@
             document.getElementById('proj-roas').textContent = blendedRoas + 'x';
             document.getElementById('proj-conversions').textContent = formatNumber(Math.round(totalProjectedConversions));
 
-            // Budget tracking visual
             const pct = (totalAllocated / TOTAL_BUDGET) * 100;
             const bar = document.getElementById('budget-progress');
             bar.style.width = Math.min(pct, 100) + '%';
@@ -334,14 +430,21 @@
             const warnGlobal = document.getElementById('budget-warning');
             const budgetText = document.getElementById('proj-budget');
             if (totalAllocated > TOTAL_BUDGET) {
-                bar.classList.replace('bg-blue-500', 'bg-red-500');
-                budgetText.classList.replace('text-blue-400', 'text-red-400');
+                bar.classList.replace('from-blue-500', 'from-red-600');
+                bar.classList.replace('to-purple-500', 'to-red-500');
+                bar.classList.replace('shadow-[0_0_10px_rgba(168,85,247,0.8)]', 'shadow-[0_0_15px_rgba(239,68,68,0.8)]');
+                budgetText.classList.replace('text-white', 'text-red-400');
                 warnGlobal.classList.remove('hidden');
             } else {
-                bar.classList.replace('bg-red-500', 'bg-blue-500');
-                budgetText.classList.replace('text-red-400', 'text-blue-400');
+                bar.classList.replace('from-red-600', 'from-blue-500');
+                bar.classList.replace('to-red-500', 'to-purple-500');
+                bar.classList.replace('shadow-[0_0_15px_rgba(239,68,68,0.8)]', 'shadow-[0_0_10px_rgba(168,85,247,0.8)]');
+                budgetText.classList.replace('text-red-400', 'text-white');
                 warnGlobal.classList.add('hidden');
             }
+
+            // Trigger the AI Insight generation
+            generateAIInsight(totalAllocated, highestSpendChannel, highestSpendAmount, limitForHighest);
         }
 
         window.onload = fetchAllData;
