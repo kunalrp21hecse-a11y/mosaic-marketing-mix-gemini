@@ -8,12 +8,12 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans">
+<body class="bg-slate-50 text-slate-800 font-sans pb-20">
 
-    <nav class="bg-indigo-900 text-white p-4 shadow-lg">
+    <nav class="bg-indigo-900 text-white p-4 shadow-lg sticky top-0 z-40">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <h1 class="text-2xl font-bold tracking-tight"><i class="fas fa-chart-line mr-2"></i> Mosaic CMO Control Room</h1>
-            <span class="bg-indigo-700 px-3 py-1 rounded text-sm font-semibold">Q1 2026 Strategy</span>
+            <span class="bg-indigo-700 px-3 py-1 rounded text-sm font-semibold border border-indigo-500">₹50L Allocation Engine</span>
         </div>
     </nav>
 
@@ -25,49 +25,102 @@
 
     <div id="dashboard" class="max-w-7xl mx-auto p-6 hidden">
         
-        <div class="mb-8">
-            <h2 class="text-3xl font-extrabold text-slate-900">Historical Performance (All Time)</h2>
-            <p class="text-slate-500">Aggregated channel performance identifying where our marketing budget is driving actual revenue.</p>
+        <div class="mb-4 mt-4">
+            <h2 class="text-2xl font-extrabold text-slate-900">Historical Performance (All Time)</h2>
+            <p class="text-slate-500 text-sm">Aggregated 3-year performance identifying baseline channel efficiencies.</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div class="bg-white p-6 rounded-xl shadow border border-slate-100 border-l-4 border-l-blue-500">
-                <p class="text-sm font-semibold text-slate-500 uppercase">Total Spend</p>
-                <p id="kpi-spend" class="text-2xl font-bold text-slate-800 mt-1">₹0</p>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-blue-500">
+                <p class="text-xs font-semibold text-slate-500 uppercase">Total Spend</p>
+                <p id="kpi-spend" class="text-xl font-bold text-slate-800 mt-1">₹0</p>
             </div>
-            <div class="bg-white p-6 rounded-xl shadow border border-slate-100 border-l-4 border-l-green-500">
-                <p class="text-sm font-semibold text-slate-500 uppercase">Total Revenue</p>
-                <p id="kpi-revenue" class="text-2xl font-bold text-slate-800 mt-1">₹0</p>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-green-500">
+                <p class="text-xs font-semibold text-slate-500 uppercase">Total Revenue</p>
+                <p id="kpi-revenue" class="text-xl font-bold text-slate-800 mt-1">₹0</p>
             </div>
-            <div class="bg-white p-6 rounded-xl shadow border border-slate-100 border-l-4 border-l-indigo-500">
-                <p class="text-sm font-semibold text-slate-500 uppercase">Blended ROAS</p>
-                <p id="kpi-roas" class="text-2xl font-bold text-slate-800 mt-1">0.0x</p>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-indigo-500">
+                <p class="text-xs font-semibold text-slate-500 uppercase">Blended ROAS</p>
+                <p id="kpi-roas" class="text-xl font-bold text-slate-800 mt-1">0.0x</p>
             </div>
-            <div class="bg-white p-6 rounded-xl shadow border border-slate-100 border-l-4 border-l-purple-500">
-                <p class="text-sm font-semibold text-slate-500 uppercase">Total Conversions</p>
-                <p id="kpi-conversions" class="text-2xl font-bold text-slate-800 mt-1">0</p>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-            <div class="bg-white p-6 rounded-xl shadow border border-slate-100">
-                <h3 class="text-lg font-bold text-slate-800 mb-4">Spend vs Revenue by Channel</h3>
-                <canvas id="spendRevChart" height="250"></canvas>
-            </div>
-            <div class="bg-white p-6 rounded-xl shadow border border-slate-100">
-                <h3 class="text-lg font-bold text-slate-800 mb-4">Efficiency Matrix (ROAS vs CPA)</h3>
-                <canvas id="efficiencyChart" height="250"></canvas>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-purple-500">
+                <p class="text-xs font-semibold text-slate-500 uppercase">Total Conversions</p>
+                <p id="kpi-conversions" class="text-xl font-bold text-slate-800 mt-1">0</p>
             </div>
         </div>
 
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                <h3 class="text-md font-bold text-slate-800 mb-2">Spend vs Revenue by Channel</h3>
+                <canvas id="spendRevChart" height="200"></canvas>
+            </div>
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                <h3 class="text-md font-bold text-slate-800 mb-2">Efficiency Matrix (ROAS vs CPA)</h3>
+                <canvas id="efficiencyChart" height="200"></canvas>
+            </div>
+        </div>
+
+        <div class="mb-6 border-t pt-8 border-slate-300">
+            <h2 class="text-3xl font-extrabold text-slate-900"><i class="fas fa-sliders-h text-indigo-600 mr-2"></i> Strategic Simulator: ₹50L Monthly Budget</h2>
+            <p class="text-slate-600 mt-2 max-w-3xl">Adjust sliders to allocate the monthly budget. The engine accounts for <strong>diminishing returns</strong> based on historical thresholds. Pushing spend too far beyond historical averages will negatively impact ROAS.</p>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-8">
+            
+            <div class="lg:w-2/3 bg-white p-6 rounded-xl shadow-md border border-slate-200" id="slider-container">
+                </div>
+
+            <div class="lg:w-1/3">
+                <div class="bg-slate-900 text-white p-6 rounded-xl shadow-xl sticky top-24">
+                    <h3 class="text-xl font-bold mb-6 border-b border-slate-700 pb-2">30-Day Projection</h3>
+                    
+                    <div class="mb-6">
+                        <p class="text-slate-400 text-sm font-semibold uppercase tracking-wide">Budget Allocated</p>
+                        <div class="flex justify-between items-end mt-1">
+                            <span id="proj-budget" class="text-3xl font-bold text-blue-400">₹0</span>
+                            <span class="text-sm text-slate-500 mb-1">/ ₹50.00 L</span>
+                        </div>
+                        <div class="w-full bg-slate-700 rounded-full h-2 mt-2">
+                            <div id="budget-progress" class="bg-blue-500 h-2 rounded-full" style="width: 0%"></div>
+                        </div>
+                        <p id="budget-warning" class="text-red-400 text-xs mt-2 hidden font-bold"><i class="fas fa-exclamation-triangle"></i> Budget Exceeded!</p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="bg-slate-800 p-4 rounded-lg border border-slate-700">
+                            <p class="text-slate-400 text-xs uppercase tracking-wide font-semibold">Est. Monthly Revenue</p>
+                            <p id="proj-revenue" class="text-2xl font-bold text-green-400 mt-1">₹0.00 L</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-slate-800 p-4 rounded-lg border border-slate-700">
+                                <p class="text-slate-400 text-xs uppercase font-semibold">Blended ROAS</p>
+                                <p id="proj-roas" class="text-xl font-bold text-indigo-300 mt-1">0.0x</p>
+                            </div>
+                            <div class="bg-slate-800 p-4 rounded-lg border border-slate-700">
+                                <p class="text-slate-400 text-xs uppercase font-semibold">New Conversions</p>
+                                <p id="proj-conversions" class="text-xl font-bold text-purple-300 mt-1">0</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 text-xs text-slate-500 leading-relaxed">
+                        * Projections use a non-linear scaling algorithm. Allocating >150% of historical average monthly spend incurs a 15% efficiency penalty. Allocating >200% incurs a 30% penalty.
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
 
     <script>
-        // Formatting functions to make numbers look like money/metrics
-        const formatMoney = (num) => '₹' + (num / 10000000).toFixed(2) + ' Cr'; // Converting to Crores for easy reading
+        const formatMoneyCr = (num) => '₹' + (num / 10000000).toFixed(2) + ' Cr';
+        const formatMoneyLakhs = (num) => '₹' + (num / 100000).toFixed(2) + ' L';
         const formatNumber = (num) => new Intl.NumberFormat('en-IN').format(num);
 
-        // Core data fetching loop
+        const TOTAL_BUDGET = 5000000; // 50 Lakhs
+        let globalChannelData = {};
+
         async function fetchAllData() {
             let allData = [];
             let page = 1;
@@ -83,72 +136,56 @@
                     if (result.data && result.data.length > 0) {
                         allData = allData.concat(result.data);
                         page++;
-                        
-                        // Failsafe: if we hit 150 pages, force stop to prevent infinite loops
                         if(page > 150) hasMore = false; 
                     } else {
-                        hasMore = false; // No more data
+                        hasMore = false; 
                     }
                 }
-                
                 processAndRenderData(allData);
-
             } catch (error) {
-                console.error("Fetch error:", error);
                 loadingText.textContent = "Error loading data. Check console.";
                 loadingText.classList.add("text-red-500");
             }
         }
 
         function processAndRenderData(rawData) {
-            // 1. Aggregate data by Channel
             const channelStats = {};
-            let totalSpend = 0;
-            let totalRevenue = 0;
-            let totalConversions = 0;
+            let totalSpend = 0, totalRevenue = 0, totalConversions = 0;
+            const totalMonths = 36; // 3 years of data roughly
 
             rawData.forEach(row => {
-                // Global Totals
                 totalSpend += row.spend;
                 totalRevenue += row.revenue;
                 totalConversions += row.conversions;
 
-                // Group by Channel
                 if (!channelStats[row.channel]) {
                     channelStats[row.channel] = {
-                        channel: row.channel,
-                        spend: 0,
-                        revenue: 0,
-                        conversions: 0,
-                        clicks: 0
+                        channel: row.channel, spend: 0, revenue: 0, conversions: 0
                     };
                 }
                 channelStats[row.channel].spend += row.spend;
                 channelStats[row.channel].revenue += row.revenue;
                 channelStats[row.channel].conversions += row.conversions;
-                channelStats[row.channel].clicks += row.clicks;
             });
 
-            // Calculate derived metrics for each channel (ROAS, CPA)
             const channels = Object.values(channelStats).map(c => {
                 c.roas = c.spend > 0 ? (c.revenue / c.spend).toFixed(2) : 0;
                 c.cpa = c.conversions > 0 ? (c.spend / c.conversions).toFixed(2) : 0;
+                // Core logic for Phase 2: Find the historical monthly average
+                c.avgMonthlySpend = c.spend / totalMonths;
                 return c;
             });
 
-            // Sort channels by Spend descending
-            channels.sort((a, b) => b.spend - a.spend);
+            channels.sort((a, b) => b.roas - a.roas); // Sort by efficiency for the sliders
 
-            // 2. Update KPI Cards
-            document.getElementById('kpi-spend').textContent = formatMoney(totalSpend);
-            document.getElementById('kpi-revenue').textContent = formatMoney(totalRevenue);
+            document.getElementById('kpi-spend').textContent = formatMoneyCr(totalSpend);
+            document.getElementById('kpi-revenue').textContent = formatMoneyCr(totalRevenue);
             document.getElementById('kpi-roas').textContent = (totalRevenue / totalSpend).toFixed(2) + 'x';
             document.getElementById('kpi-conversions').textContent = formatNumber(totalConversions);
 
-            // 3. Render Charts
             renderCharts(channels);
+            buildAllocator(channels);
 
-            // 4. Hide loading, show dashboard
             document.getElementById('loading-screen').classList.add('hidden');
             document.getElementById('dashboard').classList.remove('hidden');
         }
@@ -160,45 +197,153 @@
             const roasData = channels.map(c => c.roas);
             const cpaData = channels.map(c => c.cpa);
 
-            // Chart 1: Spend vs Revenue
             new Chart(document.getElementById('spendRevChart'), {
                 type: 'bar',
                 data: {
                     labels: labels,
                     datasets: [
-                        { label: 'Spend (₹)', data: spendData, backgroundColor: '#3b82f6', borderRadius: 4 },
-                        { label: 'Revenue (₹)', data: revData, backgroundColor: '#22c55e', borderRadius: 4 }
+                        { label: 'Spend', data: spendData, backgroundColor: '#3b82f6', borderRadius: 3 },
+                        { label: 'Revenue', data: revData, backgroundColor: '#22c55e', borderRadius: 3 }
                     ]
                 },
-                options: {
-                    responsive: true,
-                    scales: { y: { display: false } }, // Hiding massive Y-axis numbers for clean look
-                    plugins: { legend: { position: 'bottom' } }
-                }
+                options: { responsive: true, scales: { y: { display: false } }, plugins: { legend: { position: 'bottom' } } }
             });
 
-            // Chart 2: Efficiency (ROAS vs CPA)
             new Chart(document.getElementById('efficiencyChart'), {
-                type: 'bar', // Using Bar for CPA, line for ROAS
+                type: 'bar',
                 data: {
                     labels: labels,
                     datasets: [
                         { type: 'line', label: 'ROAS (x)', data: roasData, borderColor: '#8b5cf6', backgroundColor: '#8b5cf6', borderWidth: 3, tension: 0.3, yAxisID: 'y1' },
-                        { type: 'bar', label: 'CPA (₹)', data: cpaData, backgroundColor: '#e2e8f0', borderRadius: 4, yAxisID: 'y' }
+                        { type: 'bar', label: 'CPA (₹)', data: cpaData, backgroundColor: '#e2e8f0', borderRadius: 3, yAxisID: 'y' }
                     ]
                 },
                 options: {
                     responsive: true,
                     scales: {
-                        y: { type: 'linear', display: true, position: 'left', title: {display: true, text: 'Cost Per Acq.'} },
-                        y1: { type: 'linear', display: true, position: 'right', grid: {drawOnChartArea: false}, title: {display: true, text: 'Return on Ad Spend'} }
+                        y: { type: 'linear', position: 'left', title: {display: true, text: 'CPA'} },
+                        y1: { type: 'linear', position: 'right', grid: {drawOnChartArea: false}, title: {display: true, text: 'ROAS'} }
                     },
                     plugins: { legend: { position: 'bottom' } }
                 }
             });
         }
 
-        // Boot it up
+        // ==========================================
+        // PHASE 2: ALLOCATOR LOGIC
+        // ==========================================
+
+        function buildAllocator(channels) {
+            const container = document.getElementById('slider-container');
+            container.innerHTML = '';
+            
+            // Auto-distribute ₹50L based on historical ROAS rankings initially to give a smart default
+            let initialBudget = TOTAL_BUDGET / channels.length; 
+
+            channels.forEach((c, index) => {
+                globalChannelData[c.channel] = {
+                    baseRoas: parseFloat(c.roas),
+                    baseCpa: parseFloat(c.cpa),
+                    avgMonthlySpend: c.avgMonthlySpend,
+                    currentAllocation: initialBudget
+                };
+
+                const div = document.createElement('div');
+                div.className = "mb-5 pb-5 border-b border-slate-100 last:border-0 last:pb-0";
+                
+                div.innerHTML = `
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="font-bold text-slate-800 w-1/3">${c.channel} <span class="text-xs font-normal text-slate-400 block">Avg: ${formatMoneyLakhs(c.avgMonthlySpend)}/mo</span></div>
+                        <div class="w-2/3 flex items-center space-x-4">
+                            <input type="range" id="slider-${index}" min="0" max="1500000" step="50000" value="${initialBudget}" 
+                                class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+                            <span id="val-${index}" class="text-sm font-bold bg-slate-100 px-3 py-1 rounded w-24 text-right border border-slate-200">${formatMoneyLakhs(initialBudget)}</span>
+                        </div>
+                    </div>
+                    <div id="warn-${index}" class="text-xs text-right text-slate-500 h-4 transition-colors duration-300">Maintaining optimal efficiency.</div>
+                `;
+                container.appendChild(div);
+
+                // Add Event Listener to slider
+                document.getElementById(`slider-${index}`).addEventListener('input', (e) => {
+                    const newVal = parseInt(e.target.value);
+                    document.getElementById(`val-${index}`).textContent = formatMoneyLakhs(newVal);
+                    globalChannelData[c.channel].currentAllocation = newVal;
+                    updateProjections();
+                });
+            });
+
+            updateProjections(); // Run initial calculation
+        }
+
+        function updateProjections() {
+            let totalAllocated = 0;
+            let totalProjectedRevenue = 0;
+            let totalProjectedConversions = 0;
+
+            Object.keys(globalChannelData).forEach((key, index) => {
+                const data = globalChannelData[key];
+                const spend = data.currentAllocation;
+                totalAllocated += spend;
+
+                let activeRoas = data.baseRoas;
+                let activeCpa = data.baseCpa;
+                let warnEl = document.getElementById(`warn-${index}`);
+
+                // The Magic Diminishing Returns Logic
+                if (spend > data.avgMonthlySpend * 2.0) {
+                    activeRoas *= 0.70; // 30% penalty
+                    activeCpa *= 1.30;
+                    warnEl.textContent = "Over-saturated: Severe diminishing returns (-30% ROAS)";
+                    warnEl.className = "text-xs text-right h-4 text-red-500 font-bold";
+                } else if (spend > data.avgMonthlySpend * 1.5) {
+                    activeRoas *= 0.85; // 15% penalty
+                    activeCpa *= 1.15;
+                    warnEl.textContent = "Scaling Warning: Slight drop in efficiency (-15% ROAS)";
+                    warnEl.className = "text-xs text-right h-4 text-orange-500 font-semibold";
+                } else if (spend > 0 && spend < data.avgMonthlySpend * 0.5) {
+                    activeRoas *= 1.10; // 10% boost for highly targeted small spend
+                    activeCpa *= 0.90;
+                    warnEl.textContent = "Highly Targeted: Premium efficiency (+10% ROAS)";
+                    warnEl.className = "text-xs text-right h-4 text-green-500 font-semibold";
+                } else if (spend === 0) {
+                    warnEl.textContent = "Channel paused.";
+                    warnEl.className = "text-xs text-right h-4 text-slate-400";
+                } else {
+                    warnEl.textContent = "Optimal spend zone.";
+                    warnEl.className = "text-xs text-right h-4 text-slate-500";
+                }
+
+                totalProjectedRevenue += (spend * activeRoas);
+                if (activeCpa > 0) totalProjectedConversions += (spend / activeCpa);
+            });
+
+            // Update UI
+            document.getElementById('proj-budget').textContent = formatMoneyLakhs(totalAllocated);
+            document.getElementById('proj-revenue').textContent = formatMoneyLakhs(totalProjectedRevenue);
+            
+            const blendedRoas = totalAllocated > 0 ? (totalProjectedRevenue / totalAllocated).toFixed(2) : 0;
+            document.getElementById('proj-roas').textContent = blendedRoas + 'x';
+            document.getElementById('proj-conversions').textContent = formatNumber(Math.round(totalProjectedConversions));
+
+            // Budget tracking visual
+            const pct = (totalAllocated / TOTAL_BUDGET) * 100;
+            const bar = document.getElementById('budget-progress');
+            bar.style.width = Math.min(pct, 100) + '%';
+            
+            const warnGlobal = document.getElementById('budget-warning');
+            const budgetText = document.getElementById('proj-budget');
+            if (totalAllocated > TOTAL_BUDGET) {
+                bar.classList.replace('bg-blue-500', 'bg-red-500');
+                budgetText.classList.replace('text-blue-400', 'text-red-400');
+                warnGlobal.classList.remove('hidden');
+            } else {
+                bar.classList.replace('bg-red-500', 'bg-blue-500');
+                budgetText.classList.replace('text-red-400', 'text-blue-400');
+                warnGlobal.classList.add('hidden');
+            }
+        }
+
         window.onload = fetchAllData;
     </script>
 </body>
